@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 3 elements from project &apos;fr.tp.inf112.projects.robotsim&apos;&#x0D;&#x0A;- Original project: &apos;fr.tp.inf112.projects.robotsim&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     robotsim0.log&#x0D;&#x0A;     robotsim1.log&#x0D;&#x0A;     robotsim1.log.lck" description="Delete elements" element1="config/robotsim0.log" element2="config/robotsim1.log.lck" element3="config/robotsim1.log" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="3" stamp="1732456270702" subPackages="false" version="1.0"/>
+</session>

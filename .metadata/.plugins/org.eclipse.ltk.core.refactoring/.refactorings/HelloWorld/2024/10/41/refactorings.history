@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;RequestProcessor.java&apos; to &apos;fr.tp.inf112.projects.robotsim/src/Persistence&apos;&#x0D;&#x0A;- Original project: &apos;HelloWorld&apos;&#x0D;&#x0A;- Destination element: &apos;fr.tp.inf112.projects.robotsim/src/Persistence&apos;&#x0D;&#x0A;- Original element: &apos;Server.RequestProcessor.java&apos;" description="Copy compilation unit" destination="=fr.tp.inf112.projects.robotsim/src&lt;Persistence" element1="/src&lt;Server{RequestProcessor.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1728292734925" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,4 @@
+#Sat Nov 23 21:44:30 CET 2024
+__DEFAULT__=false
+expression=println
+org.eclipse.help.ui.localSearch.master=true

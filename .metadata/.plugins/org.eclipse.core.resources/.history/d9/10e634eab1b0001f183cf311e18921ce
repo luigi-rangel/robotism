@@ -1,0 +1,5 @@
+package fr.tp.slr201.projects.robotsim.service.simulation.utils;
+
+public class SimulationServiceUtils {
+
+}

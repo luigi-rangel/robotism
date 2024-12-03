@@ -1,0 +1,15 @@
+package fr.tp.inf112.projects.robotism.model.notifier;
+
+import java.util.List;
+
+import fr.tp.inf112.projects.canvas.controller.Observer;
+
+public interface FactoryModelChangedNotifier {
+	public boolean addObserver(Observer observer);
+	
+	public boolean removeObserver(Observer observer);
+	
+	public void notifyObservers();
+	
+	public List<Observer> getObservers();
+}

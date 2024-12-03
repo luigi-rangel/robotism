@@ -1,0 +1,51 @@
+/*
+ * Copyright 2014-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.example.demo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.tp.inf112.projects.canvas.model.Canvas;
+import fr.tp.inf112.projects.canvas.model.CanvasPersistenceManager;
+import fr.tp.inf112.projects.robotsim.model.Factory;
+import fr.tp.inf112.projects.robotsim.model.RemoteFactoryPersistenceManager;
+
+@RestController
+public class Controller {
+	private final CanvasPersistenceManager persistenceManager = new RemoteFactoryPersistenceManager(null);
+	private static final ArrayList<Factory> canvasList = new ArrayList<Factory>();
+
+	@GetMapping("/api/start/{id}")
+	public boolean startAnimation(@PathVariable String id) {
+		try {
+			Factory canvas = (Factory) this.persistenceManager.read(id)
+			canvasList.add(canvas);
+			
+			canvas.startSimulation();
+			
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+}

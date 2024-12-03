@@ -1,0 +1,147 @@
+package fr.tp.inf112.projects.robotsim.app;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+
+import fr.tp.inf112.projects.canvas.controller.Observer;
+import fr.tp.inf112.projects.canvas.model.Canvas;
+import fr.tp.inf112.projects.canvas.model.CanvasPersistenceManager;
+import fr.tp.inf112.projects.canvas.model.impl.BasicVertex;
+import fr.tp.inf112.projects.robotsim.model.Component;
+import fr.tp.inf112.projects.robotsim.model.Factory;
+import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
+
+public class RemoteSimulatorController extends SimulatorController {
+	final PolymorphicTypeValidator typeValidator =
+		BasicPolymorphicTypeValidator.builder()
+			.allowIfSubType(PositionedShape.class.getPackageName())
+			.allowIfSubType(Component.class.getPackageName())
+			.allowIfSubType(BasicVertex.class.getPackageName())
+			.allowIfSubType(ArrayList.class.getName())
+			.allowIfSubType(LinkedHashSet.class.getName())
+			.build();
+	final ObjectMapper objectMapper = new ObjectMapper();
+	
+	public RemoteSimulatorController(final CanvasPersistenceManager persistenceManager) {
+		this(null, persistenceManager);
+	}
+	
+	public RemoteSimulatorController(final Factory factoryModel,
+			   final CanvasPersistenceManager persistenceManager) {
+		super(factoryModel, persistenceManager);
+		
+		objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
+	}
+	
+	@Override
+	public void startAnimation() {
+		getCanvas().simulationStarted = true;
+		HttpClient httpClient = HttpClient.newHttpClient();
+		try {
+			URI uri = new URI("http", null, "localhost", 8080, "/start/1.factory",
+					null, null);
+			HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+			HttpResponse<String> response = httpClient.send(request,
+					 HttpResponse.BodyHandlers.ofString());
+			Factory factory = objectMapper.readValue(response.body(), Factory.class);
+			setCanvas(factory);
+			updateViewer();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void stopAnimation() {
+		HttpClient httpClient = HttpClient.newHttpClient();
+		try {
+			URI uri = new URI("http", null, "localhost", 8080, "/stop/1.factory",
+					null, null);
+			HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+			HttpResponse<String> response = httpClient.send(request,
+					 HttpResponse.BodyHandlers.ofString());
+			Factory factory = objectMapper.readValue(response.body(), Factory.class);
+			setCanvas(factory);
+			getCanvas().simulationStarted = false;
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void updateViewer()
+	throws InterruptedException, URISyntaxException, IOException {
+		while (getCanvas().isSimulationStarted()) {
+			final Factory remoteFactoryModel = getFactory();
+			setCanvas(remoteFactoryModel);
+			Thread.sleep(100);
+		}
+	}
+	
+	/**
+	* {@inheritDoc}
+	*/
+	@Override
+	public void setCanvas(final Canvas canvasModel) {
+		final List<Observer> observers = getCanvas().getObservers();
+		final boolean isSimulationStarted = getCanvas().isSimulationStarted();
+		super.setCanvas(canvasModel);
+		for (final Observer observer : observers) {
+			getCanvas().addObserver(observer);
+		}
+		getCanvas().simulationStarted = isSimulationStarted;
+		getCanvas().notifyObservers();
+	}
+	
+	@Override
+	public Factory getFactory() {
+		HttpClient httpClient = HttpClient.newHttpClient();
+		try {
+			URI uri = new URI("http", null, "localhost", 8080, "/model/1.factory",
+					null, null);
+			HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+			HttpResponse<String> response = httpClient.send(request,
+					HttpResponse.BodyHandlers.ofString());
+			return objectMapper.readValue(response.body(), Factory.class);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+}

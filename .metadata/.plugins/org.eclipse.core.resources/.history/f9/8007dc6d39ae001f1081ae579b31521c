@@ -1,0 +1,7 @@
+package fr.tp.inf112.projects.robotsim.model;
+
+import fr.tp.inf112.projects.canvas.view.FileCanvasChooser;
+
+public class RemoteFileCanvasChooser extends FileCanvasChooser {
+
+}

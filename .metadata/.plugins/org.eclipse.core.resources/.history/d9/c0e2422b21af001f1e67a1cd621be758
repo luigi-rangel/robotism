@@ -1,0 +1,26 @@
+package fr.tp.inf112.projects.robotsim.model;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+
+import fr.tp.inf112.projects.canvas.model.impl.BasicVertex;
+import fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape;
+
+public class TestRobotSimSerializationJSON {
+	private final ObjectMapper objectMapper;
+	
+	TestRobotSimSerializationJSON() {
+		objectMapper = new ObjectMapper();
+		PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
+				.allowIfSubType(PositionedShape.class.getPackageName())
+				.allowIfSubType(Component.class.getPackageName())
+				.allowIfSubType(BasicVertex.class.getPackageName())
+				.allowIfSubType(ArrayList.class.getName())
+				.allowIfSubType(LinkedHashSet.class.getName())
+				.build();
+		objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
+	}
+}

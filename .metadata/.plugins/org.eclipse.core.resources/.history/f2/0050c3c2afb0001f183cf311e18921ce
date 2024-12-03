@@ -1,0 +1,46 @@
+package com.example.demo;
+
+import java.util.List;
+
+import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import fr.tp.inf112.projects.canvas.controller.Observer;
+import fr.tp.inf112.projects.robotism.model.notifier.FactoryModelChangedNotifier;
+import fr.tp.inf112.projects.robotsim.model.Factory;
+
+public class KafkaFactoryModelChangeNotifier implements FactoryModelChangedNotifier {
+	
+	private Factory factoryModel;
+	private KafkaTemplate<String, Factory> simulationEventTemplate;
+	
+	public KafkaFactoryModelChangeNotifier(Factory factoryModel) {
+		this.factoryModel = factoryModel;
+		TopicBuilder.name("simulation-" + factoryModel.getId()).build();
+	}
+
+	@Override
+	public boolean addObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void notifyObservers() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Observer> getObservers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,47 @@
+package com.example.demo;
+
+import java.awt.Canvas;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.tp.inf112.projects.canvas.model.CanvasPersistenceManager;
+import fr.tp.inf112.projects.robotsim.model.Factory;
+
+@RestController
+public class Controller {
+	private Factory factoryModel;
+	
+	private final CanvasPersistenceManager persistenceManager;
+	private static final ArrayList<Canvas> canvasList = new ArrayList<Canvas>();
+	
+	public Controller(final CanvasPersistenceManager persistenceManager) {
+		this(null, persistenceManager);
+	}
+	
+	public Controller(final Factory factoryModel,
+							   final CanvasPersistenceManager persistenceManager) {
+		this.factoryModel = factoryModel;
+		this.persistenceManager = persistenceManager;
+	}
+
+	@GetMapping("/api/start/{id}")
+	public boolean startAnimation(@PathVariable String id) {
+		try {
+			Canvas canvas = this.persistenceManager.read(id);
+			canvasList.add(canvas);
+			
+			this.factoryModel = (Factory) canvas;
+			this.factoryModel.startSimulation();
+			
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+}

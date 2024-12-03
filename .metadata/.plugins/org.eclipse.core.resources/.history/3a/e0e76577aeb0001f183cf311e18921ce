@@ -1,0 +1,33 @@
+package fr.tp.inf112.projects.robotism.model.notifier;
+
+import java.util.List;
+
+import fr.tp.inf112.projects.canvas.controller.Observer;
+
+public class KafkaFactoryModelChangeNotifier implements FactoryModelChangedNotifier {
+
+	@Override
+	public boolean addObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void notifyObservers() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Observer> getObservers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

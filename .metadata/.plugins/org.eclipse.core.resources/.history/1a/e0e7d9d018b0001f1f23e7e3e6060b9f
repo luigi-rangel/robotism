@@ -1,0 +1,67 @@
+package fr.tp.inf112.projects.robotism.persistence;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import fr.tp.inf112.projects.canvas.model.Canvas;
+import fr.tp.inf112.projects.canvas.view.FileCanvasChooser;
+import fr.tp.inf112.projects.robotsim.model.FactoryPersistenceManager;
+
+public class RequestProcessor implements Runnable {
+    private Socket socket;
+    private FileCanvasChooser canvasChooser;
+    private FactoryPersistenceManager factoryPersistenceManager;
+
+    public RequestProcessor(Socket socket) {
+        this.socket = socket;
+        this.canvasChooser = new FileCanvasChooser("factory", "Puck Factory");
+        this.factoryPersistenceManager = new FactoryPersistenceManager(canvasChooser);
+    }
+
+    @Override
+    public void run() {
+        try (InputStream inpStr = socket.getInputStream();
+            ObjectInputStream ois = new ObjectInputStream(inpStr);
+            OutputStream outStr = socket.getOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(outStr)) {
+             
+            Object msg = ois.readObject();
+            System.out.println(msg);
+            if (msg instanceof String) {
+        		final JFileChooser chooser = new JFileChooser("./");
+        	    chooser.setFileFilter((FileNameExtensionFilter) msg);
+        	    oos.writeObject(chooser.getCurrentDirectory().listFiles(file -> !file.isDirectory() && chooser.accept(file)));
+        	    oos.flush();
+            } else if (msg instanceof String) {
+                Canvas res = this.factoryPersistenceManager.read((String) msg);
+                oos.writeObject(res);
+                oos.flush();
+            } else if (msg instanceof Canvas) {
+                this.factoryPersistenceManager.persist((Canvas) msg);
+            }
+        } catch (IOException e) {
+            // Handle the socket exception or IO error
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // Handle class not found exception when deserializing the object
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!socket.isClosed()) {
+                    socket.close();  // Ensure socket is closed gracefully
+                }
+            } catch (IOException e) {
+                e.printStackTrace();  // Handle potential errors during socket close
+            }
+        }
+    }
+}

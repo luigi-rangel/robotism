@@ -1,0 +1,5 @@
+package fr.tp.slr201.projects.robotism.service.simulation.config;
+
+public class SimulationServiceConfig {
+
+}

@@ -1,0 +1,82 @@
+package fr.tp.inf112.projects.robotsim.model;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import fr.tp.inf112.projects.canvas.model.Canvas;
+import fr.tp.inf112.projects.canvas.model.CanvasChooser;
+import fr.tp.inf112.projects.canvas.model.impl.AbstractCanvasPersistenceManager;
+
+public class RemoteFactoryPersistenceManager extends AbstractCanvasPersistenceManager {
+	
+	public RemoteFactoryPersistenceManager(final CanvasChooser canvasChooser) {
+		super(canvasChooser);
+	}
+	
+	@Override
+	public Canvas read(final String canvasId) {
+		Canvas res = null;
+		
+		try {
+			int port = 80;
+			InetAddress netAddr = InetAddress.getByName("localhost");
+			SocketAddress sockAddr = new InetSocketAddress(netAddr, port);
+			try (Socket socket = new Socket()) {
+				socket.connect(sockAddr, 1000); // Timeout in ms
+				
+				OutputStream outStr = socket.getOutputStream();
+				PrintWriter writer = new PrintWriter(outStr, true);
+
+				InputStream inpStr = socket.getInputStream();
+				ObjectInputStream ois = new ObjectInputStream(inpStr);
+				
+				writer.println(canvasId);
+				
+				res = (Canvas) ois.readObject();
+				
+				writer.close();
+				ois.close();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	
+	@Override
+	public void persist(final Canvas canvasModel) {
+		try {
+			int port = 80;
+			InetAddress netAddr = InetAddress.getByName("localhost");
+			SocketAddress sockAddr = new InetSocketAddress(netAddr, port);
+			try (Socket socket = new Socket()) {
+				socket.connect(sockAddr, 1000); // Timeout in ms
+				
+				OutputStream outStr = socket.getOutputStream();
+				PrintWriter writer = new PrintWriter(outStr, true);
+				
+				writer.println(canvasModel);
+				writer.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public boolean delete(final Canvas canvasModel) {
+		return true;
+	}
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.net.SocketAddress"/>
+    <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+    <fullyQualifiedTypeName name="java.io.Reader"/>
+    <fullyQualifiedTypeName name="javax.print.attribute.standard.OutputDeviceAssigned"/>
+    <fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
+    <fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+    <fullyQualifiedTypeName name="java.io.Writer"/>
+    <fullyQualifiedTypeName name="fr.tp.inf112.projects.robotsim.app.SimulatorApplication"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator"/>
+    <fullyQualifiedTypeName name="fr.tp.inf112.projects.robotsim.model.shapes.PositionedShape"/>
+    <fullyQualifiedTypeName name="fr.tp.inf112.projects.canvas.model.impl.BasicVertex"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.util.LinkedHashSet"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator"/>
+    <fullyQualifiedTypeName name="fr.tp.slr112.projects.robotsim.utils.SimulationServiceUtils"/>
+</qualifiedTypeNameHistroy>
